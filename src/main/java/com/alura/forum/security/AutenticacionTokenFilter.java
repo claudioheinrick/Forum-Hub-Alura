@@ -2,6 +2,7 @@ package com.alura.forum.security;
 
 import com.alura.forum.modelo.Usuario;
 import com.alura.forum.repository.UsuarioRepository;
+import com.alura.forum.service.TokenService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;

@@ -1,6 +1,7 @@
 package com.alura.forum.security;
 
 import com.alura.forum.repository.UsuarioRepository;
+import com.alura.forum.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

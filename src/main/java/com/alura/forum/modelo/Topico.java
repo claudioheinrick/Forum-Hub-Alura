@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import com.alura.forum.modelo.StatusTopico;
 
 @Entity
 @Table(name = "topicos")
@@ -23,7 +24,7 @@ public class Topico {
     private LocalDateTime fechaCreacion = LocalDateTime.now();
     
     @Enumerated(EnumType.STRING)
-    private StatusTopico status = StatusTopico.NO_RESPONDIDO;
+    private StatusTopico status = StatusTopico.NAO_RESPONDIDO;
     
     @ManyToOne
     private Usuario autor;
@@ -70,9 +71,3 @@ public class Topico {
     public void setRespuestas(List<Respuesta> respuestas) { this.respuestas = respuestas; }
 }
 
-enum StatusTopico {
-    NO_RESPONDIDO,
-    NAO_SOLUCIONADO,
-    SOLUCIONADO,
-    FECHADO
-}

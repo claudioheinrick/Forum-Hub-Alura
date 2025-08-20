@@ -4,16 +4,22 @@ import com.alura.forum.modelo.Usuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Service
 public class TokenService {
     @Value("${jwt.secret}")
     private String secret;
+    
+    private SecretKey getSigningKey() {
+        return Keys.hmacShaKeyFor(secret.getBytes());
+    }
     
     public String generarToken(Authentication authentication) {
         Usuario usuario = (Usuario) authentication.getPrincipal();
@@ -25,13 +31,16 @@ public class TokenService {
                 .setSubject(usuario.getId().toString())
                 .setIssuedAt(hoy)
                 .setExpiration(expiracion)
-                .signWith(SignatureAlgorithm.HS256, secret)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
     
     public boolean validarToken(String token) {
         try {
-            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+            Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token);
             return true;
         } catch (Exception e) {
             return false;
@@ -39,7 +48,11 @@ public class TokenService {
     }
     
     public Long getIdUsuario(String token) {
-        Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
         return Long.parseLong(claims.getSubject());
     }
 }
